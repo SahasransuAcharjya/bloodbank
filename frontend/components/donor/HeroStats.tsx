@@ -53,16 +53,14 @@ export function HeroStats({ donor }: HeroStatsProps) {
                     </div>
 
                     {/* Back */}
-                    <div className="absolute h-full w-full rotate-y-180 backface-hidden rounded-2xl bg-[#1D3557] p-6 text-white shadow-xl">
-                        <div className="flex h-full flex-col items-center justify-center gap-2">
-                            <div className="h-24 w-24 bg-white p-1 rounded-lg">
-                                {/* Placeholder for QR Code */}
-                                <div className="h-full w-full bg-black/10 flex items-center justify-center text-black text-xs text-center">
-                                    QR Code
-                                </div>
-                            </div>
-                            <p className="text-xs opacity-70">Scan for quick check-in</p>
-                        </div>
+                    <div className="absolute h-full w-full rotate-y-180 backface-hidden rounded-2xl bg-[#1D3557] p-6 text-white shadow-xl flex flex-col items-center justify-center text-center">
+                        <h4 className="mb-2 text-sm font-bold text-[#A8DADC] uppercase tracking-wider">My Pledge</h4>
+                        <p className="text-xs italic leading-relaxed opacity-90 font-serif">
+                            &quot;I hold this card as a guardian of life.
+                            My blood is a gift, given freely to save another.
+                            I pledge to honor this privilege, stay healthy, and answer the call of those in need.&quot;
+                        </p>
+                        <div className="mt-3 h-0.5 w-12 bg-[#E63946]/50"></div>
                     </div>
                 </div>
             </div>

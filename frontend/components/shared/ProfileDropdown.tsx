@@ -86,12 +86,20 @@ export function ProfileDropdown({ user }: ProfileDropdownProps) {
                                 >
                                     {theme === "light" ? "Dark Mode" : "Light Mode"}
                                 </button>
-                                <button className="block w-full px-8 py-2 text-left text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
+                                <Link
+                                    href="/agreement"
+                                    className="block w-full px-8 py-2 text-left text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                                    onClick={() => setIsOpen(false)}
+                                >
                                     User Agreement
-                                </button>
-                                <button className="block w-full px-8 py-2 text-left text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
+                                </Link>
+                                <Link
+                                    href="/support"
+                                    className="block w-full px-8 py-2 text-left text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                                    onClick={() => setIsOpen(false)}
+                                >
                                     Support
-                                </button>
+                                </Link>
                             </div>
                         )}
 
