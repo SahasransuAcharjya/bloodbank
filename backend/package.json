@@ -1,20 +1,25 @@
 {
-  "name": "backend",
+  "name": "jeevandhaara-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "REST API for JeevanDhaara Blood Donation Platform",
+  "main": "src/server.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "license": "MIT",
   "dependencies": {
-    "express": "^5.2.1",
-    "mongoose": "^9.0.2"
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.0",
+    "express": "^4.19.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.0"
   }
 }
