@@ -77,7 +77,7 @@ export default function DonorDashboardPage() {
         <section className="grid grid-cols-1 gap-6 lg:grid-cols-12">
           {/* Left Column: Request Feed (Larger) */}
           <div className="lg:col-span-8">
-            <RequestFeed />
+            <RequestFeed donor={donor} />
           </div>
 
           {/* Right Column: Stats & Widgets */}

@@ -4,26 +4,30 @@
 /* Base tweaks */
 @layer base {
   body {
-    @apply selection:bg-[#E63946]/10 selection:text-[#E63946];
+    @apply selection:bg-[#E63946]/20 selection:text-[#E63946];
   }
 }
 
 /* Reusable utility classes */
 @layer components {
   .glass-card {
-    @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-lg rounded-3xl dark:bg-[#1e293b]/70 dark:border-white/10;
+    @apply bg-white/80 backdrop-blur-xl border border-white/50 shadow-xl shadow-gray-200/50 rounded-3xl dark:bg-[#1e293b]/80 dark:border-white/10 dark:shadow-black/50 transition-all duration-300;
+  }
+
+  .glass-card-hover {
+    @apply hover:shadow-2xl hover:shadow-gray-200/80 hover:-translate-y-1 dark:hover:shadow-black/70;
   }
 
   .pill {
-    @apply inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-medium;
+    @apply inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-bold tracking-wide uppercase;
   }
 
   .cta-btn {
-    @apply inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold bg-[#E63946] text-white shadow-lg shadow-[#E63946]/30 hover:bg-[#d42f3b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#E63946] transition-all duration-200;
+    @apply inline-flex items-center justify-center rounded-full px-8 py-3 text-sm font-bold bg-[#E63946] text-white shadow-lg shadow-[#E63946]/30 hover:bg-[#d42f3b] hover:shadow-[#E63946]/50 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#E63946] transition-all duration-300;
   }
 
   .cta-outline {
-    @apply inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold border border-[#1D3557]/20 text-[#1D3557] bg-white/70 hover:bg-[#1D3557]/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1D3557] transition-all duration-200;
+    @apply inline-flex items-center justify-center rounded-full px-8 py-3 text-sm font-bold border-2 border-[#1D3557]/10 text-[#1D3557] bg-white/50 backdrop-blur-sm hover:bg-white hover:border-[#1D3557]/30 hover:shadow-lg hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1D3557] transition-all duration-300 dark:border-white/10 dark:text-white dark:bg-white/5 dark:hover:bg-white/10;
   }
 }
 
@@ -42,5 +46,51 @@
 
   .rotate-y-180 {
     transform: rotateY(180deg);
+  }
+
+  /* Custom Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-gray-200 rounded-full dark:bg-gray-700;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-300 dark:bg-gray-600;
+  }
+
+  /* Animations */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .delay-300 {
+    animation-delay: 300ms;
   }
 }
