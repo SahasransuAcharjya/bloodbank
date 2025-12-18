@@ -1,26 +1,35 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Base tweaks */
+@layer base {
+  body {
+    @apply selection:bg-[#E63946]/10 selection:text-[#E63946];
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Reusable utility classes */
+@layer components {
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-lg rounded-3xl;
+  }
+
+  .pill {
+    @apply inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-medium;
+  }
+
+  .cta-btn {
+    @apply inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold
+      bg-[#E63946] text-white shadow-lg shadow-[#E63946]/30 hover:bg-[#d42f3b]
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
+      focus-visible:ring-[#E63946] transition-all duration-200;
+  }
+
+  .cta-outline {
+    @apply inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold
+      border border-[#1D3557]/20 text-[#1D3557] bg-white/70 hover:bg-[#1D3557]/5
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
+      focus-visible:ring-[#1D3557] transition-all duration-200;
+  }
 }
