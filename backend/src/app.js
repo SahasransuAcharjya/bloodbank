@@ -7,6 +7,8 @@ import donorRoutes from "./routes/donors.js";
 import hospitalRoutes from "./routes/hospitals.js";
 import appointmentRoutes from "./routes/appointments.js";
 import adminRoutes from "./routes/admin.js";
+import requestRoutes from "./routes/requests.js";
+import campRoutes from "./routes/camps.js";
 
 import { errorHandler } from "./middleware/errorMiddleware.js";
 
@@ -38,6 +40,8 @@ app.use("/api/donors", donorRoutes);
 app.use("/api/hospitals", hospitalRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/requests", requestRoutes);
+app.use("/api/camps", campRoutes);
 
 // Global error handler (must be last)
 app.use(errorHandler);

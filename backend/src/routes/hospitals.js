@@ -3,6 +3,8 @@ import {
   createRequest,
   listRequests,
   updateRequestStatus,
+  getMe,
+  updateProfile,
 } from "../controllers/hospitalController.js";
 import { verifyToken, requireRole } from "../middleware/authMiddleware.js";
 
@@ -30,6 +32,21 @@ router.patch(
   verifyToken,
   requireRole("HOSPITAL", "ADMIN"),
   updateRequestStatus
+);
+
+// Hospital profile
+router.get(
+  "/me",
+  verifyToken,
+  requireRole("HOSPITAL"),
+  getMe
+);
+
+router.put(
+  "/me",
+  verifyToken,
+  requireRole("HOSPITAL"),
+  updateProfile
 );
 
 export default router;

@@ -1,4 +1,25 @@
 import * as requestService from "../services/requestService.js";
+import * as hospitalService from "../services/hospitalService.js";
+
+export async function getMe(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const hospital = await hospitalService.getHospitalById(userId);
+    res.json(hospital);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function updateProfile(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const updated = await hospitalService.updateHospitalProfile(userId, req.body);
+    res.json(updated);
+  } catch (err) {
+    next(err);
+  }
+}
 
 export async function createRequest(req, res, next) {
   try {

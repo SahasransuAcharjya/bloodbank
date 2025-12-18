@@ -6,7 +6,7 @@ const requiredVars = ["MONGODB_URI", "JWT_SECRET"];
 
 for (const key of requiredVars) {
   if (!process.env[key]) {
-    console.warn(`[env] Missing ${key} in .env`);
+    throw new Error(`[env] Missing required environment variable: ${key}`);
   }
 }
 

@@ -7,18 +7,18 @@ export function Navbar() {
   const pathname = usePathname();
 
   const links = [
-    { href: "/(public)", label: "Home" },
-    { href: "/(public)/about", label: "About" },
-    { href: "/(donor)/dashboard", label: "Donor" },
-    { href: "/(hospital)/dashboard", label: "Hospital" },
-    { href: "/(admin)/panel", label: "Admin" },
+    { href: "/", label: "Home" },
+    { href: "/about", label: "About" },
+    { href: "/donor/dashboard", label: "Donor" },
+    { href: "/hospital/dashboard", label: "Hospital" },
+    { href: "/panel", label: "Admin" },
   ];
 
   return (
     <nav className="sticky top-0 z-30 border-b border-white/60 bg-[#F1FAEE]/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <Link
-          href="/(public)"
+          href="/"
           className="text-sm font-semibold text-[#1D3557]"
         >
           Jeevan<span className="text-[#E63946]">Dhaara</span>

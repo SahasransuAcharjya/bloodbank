@@ -1,9 +1,7 @@
+import "./config/env.js"; // Load env vars first
 import http from "http";
 import app from "./app.js";
 import "./config/db.js"; // initializes MongoDB connection
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const PORT = process.env.PORT || 4000;
 

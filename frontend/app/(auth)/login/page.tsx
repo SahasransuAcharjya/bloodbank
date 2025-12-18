@@ -28,7 +28,17 @@ export default function LoginPage() {
         setError(data.message || "Login failed");
       } else {
         localStorage.setItem("jeevandhaara-token", data.token);
-        window.location.href = "/";
+
+        // Redirect based on role
+        const role = data.user?.role;
+        if (role === "HOSPITAL") {
+          window.location.href = "/hospital/dashboard";
+        } else if (role === "ADMIN") {
+          window.location.href = "/panel";
+        } else {
+          // Default to donor dashboard
+          window.location.href = "/donor/dashboard";
+        }
       }
     } catch {
       setError("Unable to reach server");

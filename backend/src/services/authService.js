@@ -2,7 +2,9 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 
-const JWT_SECRET = process.env.JWT_SECRET;
+import { env } from "../config/env.js";
+
+const JWT_SECRET = env.jwtSecret;
 
 export async function registerUser({ name, email, password, role, bloodType, phone, city }) {
   const existing = await User.findOne({ email });

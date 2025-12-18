@@ -14,10 +14,10 @@ export default function PublicHomePage() {
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row">
-        <Link href="/(auth)/register" className="cta-btn justify-center">
+        <Link href="/register" className="cta-btn justify-center">
           Join as Donor / Hospital
         </Link>
-        <Link href="/(auth)/login" className="cta-outline justify-center">
+        <Link href="/login" className="cta-outline justify-center">
           Login
         </Link>
       </div>

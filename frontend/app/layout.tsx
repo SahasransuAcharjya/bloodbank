@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
+import { ThemeProvider } from "@/context/ThemeContext";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -17,11 +19,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${inter.className} bg-[#F1FAEE] text-[#333333] antialiased`}
+        className={`${inter.className} bg-[#F1FAEE] text-[#333333] antialiased dark:bg-[#0f172a] dark:text-white transition-colors duration-300`}
       >
-        <div className="min-h-screen bg-gradient-to-b from-[#F1FAEE] via-[#F1FAEE] to-white">
-          {children}
-        </div>
+        <ThemeProvider>
+          <div className="min-h-screen bg-gradient-to-b from-[#F1FAEE] via-[#F1FAEE] to-white dark:from-[#0f172a] dark:via-[#1e293b] dark:to-[#0f172a] transition-colors duration-300">
+            {children}
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );
