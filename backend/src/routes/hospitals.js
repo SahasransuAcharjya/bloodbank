@@ -5,6 +5,10 @@ import {
   updateRequestStatus,
   getMe,
   updateProfile,
+  getDashboardStats,
+  getInventory,
+  addBloodUnit,
+  updateUnitStatus,
 } from "../controllers/hospitalController.js";
 import { verifyToken, requireRole } from "../middleware/authMiddleware.js";
 
@@ -47,6 +51,35 @@ router.put(
   verifyToken,
   requireRole("HOSPITAL"),
   updateProfile
+);
+
+// Dashboard & Inventory
+router.get(
+  "/dashboard-stats",
+  verifyToken,
+  requireRole("HOSPITAL"),
+  getDashboardStats
+);
+
+router.get(
+  "/inventory",
+  verifyToken,
+  requireRole("HOSPITAL"),
+  getInventory
+);
+
+router.post(
+  "/inventory",
+  verifyToken,
+  requireRole("HOSPITAL"),
+  addBloodUnit
+);
+
+router.patch(
+  "/inventory/:id/status",
+  verifyToken,
+  requireRole("HOSPITAL"),
+  updateUnitStatus
 );
 
 export default router;

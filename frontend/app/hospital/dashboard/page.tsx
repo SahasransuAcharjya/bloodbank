@@ -1,51 +1,171 @@
-async function getHospitalRequests() {
-    const base = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const res = await fetch(`${base}/api/hospitals/requests`, {
-      cache: "no-store",
-      // later: add Authorization header from a client component
-    });
-    if (!res.ok) return [];
-    return res.json();
-  }
-  
-  export default async function HospitalDashboardPage() {
-    const requests = await getHospitalRequests();
-  
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { clsx } from "clsx";
+import { StockVisualizer } from "@/components/hospital/StockVisualizer";
+import { ExpiryWatchlist } from "@/components/hospital/ExpiryWatchlist";
+import { Activity, AlertCircle, Clock, Users } from "lucide-react";
+
+export default function HospitalDashboardPage() {
+  const router = useRouter();
+  const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchStats() {
+      const token = localStorage.getItem("jeevandhaara-token");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/hospitals/dashboard-stats`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (res.ok) {
+          const data = await res.json();
+          setStats(data);
+        } else {
+          // If 403/401, maybe not a hospital or invalid token
+          // For now, let's just log it. In real app, redirect or show error.
+          console.error("Failed to fetch stats");
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchStats();
+  }, [router]);
+
+  if (loading) {
     return (
-      <main className="mx-auto max-w-5xl px-4 py-10">
-        <header className="mb-6">
-          <h1 className="text-2xl font-semibold text-[#1D3557]">
-            Hospital Dashboard
-          </h1>
-          <p className="text-sm text-[#333333]/70">
-            Track blood requests created by your center.
-          </p>
-        </header>
-  
-        <section className="space-y-3">
-          {requests.length === 0 ? (
-            <p className="text-sm text-[#333333]/70">
-              No requests yet. Start by creating a new blood request.
-            </p>
-          ) : (
-            requests.map((req: any) => (
-              <div key={req._id} className="glass-card flex items-center justify-between p-4 text-sm">
-                <div>
-                  <p className="font-semibold text-[#1D3557]">
-                    {req.bloodType} – {req.units} units
-                  </p>
-                  <p className="text-xs text-[#333333]/70">
-                    Urgency: {req.urgency} · Status: {req.status}
-                  </p>
-                </div>
-                <span className="pill bg-[#E63946]/10 text-[#E63946] text-xs">
-                  {req.city ?? "Unknown city"}
-                </span>
-              </div>
-            ))
-          )}
-        </section>
-      </main>
+      <div className="flex h-96 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#E63946] border-t-transparent"></div>
+      </div>
     );
   }
-  
+
+  // Fallback data if stats are empty (e.g. new hospital)
+  const inventory = stats?.inventory || {};
+  const expiringUnits = stats?.expiringUnits || [];
+  const pendingRequestsCount = stats?.pendingRequests || 0;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Hospital Command Center
+        </h1>
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+          <span className="flex h-2 w-2 rounded-full bg-green-500"></span>
+          System Operational
+        </div>
+      </div>
+
+      {/* Top Stats Row */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          label="Total Units"
+          value={Object.values(inventory).reduce((a: any, b: any) => a + b, 0)}
+          icon={Activity}
+          trend="+12% from last week"
+        />
+        <StatCard
+          label="Pending Requests"
+          value={pendingRequestsCount}
+          icon={Clock}
+          alert={pendingRequestsCount > 0}
+        />
+        <StatCard
+          label="Critical Low"
+          value="2 Types"
+          icon={AlertCircle}
+          color="text-red-600"
+        />
+        <StatCard
+          label="Donors Today"
+          value="14"
+          icon={Users}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        {/* Main Content - 2/3 width */}
+        <div className="space-y-6 lg:col-span-2">
+          <StockVisualizer inventory={inventory} />
+
+          {/* Recent Activity Feed */}
+          <div className="rounded-xl bg-white p-6 shadow-sm dark:bg-[#1e293b]">
+            <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+              Recent Activity
+            </h2>
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="flex items-center gap-4 border-b border-gray-100 pb-4 last:border-0 last:pb-0 dark:border-gray-800">
+                  <div className="h-2 w-2 rounded-full bg-blue-500"></div>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <span className="font-medium text-gray-900 dark:text-white">Dr. Sarah</span> requested <span className="font-bold">2 units of O+</span> for Patient #4920
+                  </p>
+                  <span className="ml-auto text-xs text-gray-400">10m ago</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Sidebar Content - 1/3 width */}
+        <div className="space-y-6">
+          <ExpiryWatchlist units={expiringUnits} />
+
+          {/* Quick Actions */}
+          <div className="rounded-xl bg-white p-6 shadow-sm dark:bg-[#1e293b]">
+            <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+              Quick Actions
+            </h2>
+            <div className="space-y-2">
+              <button className="w-full rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-left text-sm font-medium text-red-700 hover:bg-red-100 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-400">
+                Broadcast SOS Alert
+              </button>
+              <button className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                Register Walk-in Donor
+              </button>
+              <button className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                Schedule Blood Camp
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StatCard({ label, value, icon: Icon, trend, alert, color }: any) {
+  return (
+    <div className="rounded-xl bg-white p-6 shadow-sm dark:bg-[#1e293b]">
+      <div className="flex items-start justify-between">
+        <div>
+          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{label}</p>
+          <h3 className={clsx("mt-2 text-3xl font-bold", color || "text-gray-900 dark:text-white")}>
+            {value}
+          </h3>
+        </div>
+        <div className={clsx("rounded-lg p-2", alert ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400")}>
+          <Icon className="h-6 w-6" />
+        </div>
+      </div>
+      {trend && (
+        <p className="mt-2 text-xs font-medium text-green-600">
+          {trend}
+        </p>
+      )}
+    </div>
+  );
+}
