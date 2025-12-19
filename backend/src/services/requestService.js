@@ -1,24 +1,31 @@
-import Request from "../models/request.js";
+import BloodRequest from "../models/bloodRequest.js";
 
 export async function createRequest(payload) {
-  return Request.create(payload);
+  return BloodRequest.create(payload);
 }
 
-export async function listRequests({ hospitalId }) {
+export async function listRequests({ hospitalId, status }) {
   const filter = {};
-  if (hospitalId) filter.hospitalId = hospitalId;
-  return Request.find(filter).sort({ createdAt: -1 });
+  // If hospitalId is provided, we might want to filter by it, 
+  // but BloodRequest has 'requesterId' which is a User ID (Hospital).
+  // Assuming hospitalId passed here is the User ID.
+  if (hospitalId) filter.requesterId = hospitalId;
+  if (status) filter.status = status;
+
+  return BloodRequest.find(filter)
+    .sort({ createdAt: -1 })
+    .populate("requesterId", "name email phone");
 }
 
 export async function updateRequestStatus(id, status) {
-  const allowedStatuses = ["OPEN", "MATCHED", "FULFILLED", "CANCELLED"];
+  const allowedStatuses = ["OPEN", "IN_PROGRESS", "FULFILLED", "CANCELLED"];
   if (!allowedStatuses.includes(status)) {
     const err = new Error("Invalid status");
     err.status = 400;
     throw err;
   }
 
-  const updated = await Request.findByIdAndUpdate(
+  const updated = await BloodRequest.findByIdAndUpdate(
     id,
     { status },
     { new: true }
@@ -31,6 +38,8 @@ export async function updateRequestStatus(id, status) {
   return updated;
 }
 
-export async function countOpenRequests() {
-  return Request.countDocuments({ status: "OPEN" });
+export async function countOpenRequests(hospitalId) {
+  const filter = { status: "OPEN" };
+  if (hospitalId) filter.requesterId = hospitalId;
+  return BloodRequest.countDocuments(filter);
 }

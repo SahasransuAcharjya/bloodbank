@@ -25,6 +25,18 @@ router.get("/", async (req, res) => {
     }
 });
 
+// GET requests created by the current user
+router.get("/my", verifyToken, async (req, res) => {
+    try {
+        const requests = await BloodRequest.find({ requesterId: req.user.id })
+            .sort({ createdAt: -1 })
+            .populate("requesterId", "name email phone");
+        res.json(requests);
+    } catch (err) {
+        res.status(500).json({ message: "Error fetching my requests", error: err.message });
+    }
+});
+
 // POST create a new request (Authenticated users)
 router.post("/", verifyToken, async (req, res) => {
     try {

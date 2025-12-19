@@ -1,8 +1,35 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Bell, Search, Plus } from "lucide-react";
+import { ProfileDropdown } from "@/components/shared/ProfileDropdown";
 
 export function TopBar() {
+    const [user, setUser] = useState<{ name: string; role: string } | null>(null);
+
+    useEffect(() => {
+        async function fetchUser() {
+            const token = localStorage.getItem("jeevandhaara-token");
+            if (!token) return;
+
+            try {
+                const res = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/hospitals/me`,
+                    {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }
+                );
+                if (res.ok) {
+                    const data = await res.json();
+                    setUser({ name: data.name, role: "HOSPITAL" });
+                }
+            } catch (err) {
+                console.error("Failed to fetch hospital profile", err);
+            }
+        }
+        fetchUser();
+    }, []);
+
     return (
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-200 bg-white px-6 dark:border-gray-800 dark:bg-[#1e293b]">
             {/* Search */}
@@ -27,7 +54,11 @@ export function TopBar() {
                     <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500"></span>
                 </button>
 
-                <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+                {user ? (
+                    <ProfileDropdown user={user} />
+                ) : (
+                    <div className="h-10 w-10 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></div>
+                )}
             </div>
         </header>
     );

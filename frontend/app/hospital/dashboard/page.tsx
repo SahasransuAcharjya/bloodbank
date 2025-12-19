@@ -5,42 +5,51 @@ import { useRouter } from "next/navigation";
 import { clsx } from "clsx";
 import { StockVisualizer } from "@/components/hospital/StockVisualizer";
 import { ExpiryWatchlist } from "@/components/hospital/ExpiryWatchlist";
+import { DoctorIdCard } from "@/components/hospital/DoctorIdCard";
+import { RequestKanban } from "@/components/hospital/RequestKanban";
+import { BroadcastSOS } from "@/components/hospital/BroadcastSOS";
+import { CreateCampModal } from "@/components/hospital/CreateCampModal";
+import { AddBloodUnitModal } from "@/components/hospital/AddBloodUnitModal";
 import { Activity, AlertCircle, Clock, Users } from "lucide-react";
 
 export default function HospitalDashboardPage() {
   const router = useRouter();
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showSOS, setShowSOS] = useState(false);
+  const [showCampModal, setShowCampModal] = useState(false);
+  const [showAddUnitModal, setShowAddUnitModal] = useState(false);
+
+  const fetchStats = async () => {
+    const token = localStorage.getItem("jeevandhaara-token");
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/hospitals/dashboard-stats`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setStats(data);
+      } else {
+        // If 403/401, maybe not a hospital or invalid token
+        // For now, let's just log it. In real app, redirect or show error.
+        console.error("Failed to fetch stats");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    async function fetchStats() {
-      const token = localStorage.getItem("jeevandhaara-token");
-      if (!token) {
-        router.push("/login");
-        return;
-      }
-
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/hospitals/dashboard-stats`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        if (res.ok) {
-          const data = await res.json();
-          setStats(data);
-        } else {
-          // If 403/401, maybe not a hospital or invalid token
-          // For now, let's just log it. In real app, redirect or show error.
-          console.error("Failed to fetch stats");
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchStats();
   }, [router]);
 
@@ -101,27 +110,18 @@ export default function HospitalDashboardPage() {
         <div className="space-y-6 lg:col-span-2">
           <StockVisualizer inventory={inventory} />
 
-          {/* Recent Activity Feed */}
+          {/* Request Command Center */}
           <div className="rounded-xl bg-white p-6 shadow-sm dark:bg-[#1e293b]">
             <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-              Recent Activity
+              Request Command Center
             </h2>
-            <div className="space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center gap-4 border-b border-gray-100 pb-4 last:border-0 last:pb-0 dark:border-gray-800">
-                  <div className="h-2 w-2 rounded-full bg-blue-500"></div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
-                    <span className="font-medium text-gray-900 dark:text-white">Dr. Sarah</span> requested <span className="font-bold">2 units of O+</span> for Patient #4920
-                  </p>
-                  <span className="ml-auto text-xs text-gray-400">10m ago</span>
-                </div>
-              ))}
-            </div>
+            <RequestKanban />
           </div>
         </div>
 
         {/* Sidebar Content - 1/3 width */}
         <div className="space-y-6">
+          <DoctorIdCard />
           <ExpiryWatchlist units={expiringUnits} />
 
           {/* Quick Actions */}
@@ -130,19 +130,36 @@ export default function HospitalDashboardPage() {
               Quick Actions
             </h2>
             <div className="space-y-2">
-              <button className="w-full rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-left text-sm font-medium text-red-700 hover:bg-red-100 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-400">
+              <button
+                onClick={() => setShowSOS(true)}
+                className="w-full rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-left text-sm font-medium text-red-700 hover:bg-red-100 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-400"
+              >
                 Broadcast SOS Alert
               </button>
-              <button className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
-                Register Walk-in Donor
+              <button
+                onClick={() => setShowAddUnitModal(true)}
+                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+              >
+                Add Blood Unit (Walk-in)
               </button>
-              <button className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+              <button
+                onClick={() => setShowCampModal(true)}
+                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+              >
                 Schedule Blood Camp
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      <BroadcastSOS isOpen={showSOS} onClose={() => setShowSOS(false)} />
+      <CreateCampModal isOpen={showCampModal} onClose={() => setShowCampModal(false)} />
+      <AddBloodUnitModal
+        isOpen={showAddUnitModal}
+        onClose={() => setShowAddUnitModal(false)}
+        onSuccess={fetchStats}
+      />
     </div>
   );
 }

@@ -25,7 +25,7 @@ const bloodRequestSchema = new Schema(
         },
         status: {
             type: String,
-            enum: ["OPEN", "FULFILLED", "CANCELLED"],
+            enum: ["OPEN", "IN_PROGRESS", "FULFILLED", "CANCELLED"],
             default: "OPEN",
             index: true,
         },
