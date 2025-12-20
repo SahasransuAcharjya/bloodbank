@@ -40,7 +40,8 @@ export function RequestKanban() {
             // For now, let's assume we'll use a new endpoint or update the existing one.
             // Let's use the /api/requests endpoint we saw earlier.
 
-            const requestsRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/requests/my`, {
+            // Fetch ALL requests (including donor requests) for the command center
+            const requestsRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/requests?status=ALL`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 

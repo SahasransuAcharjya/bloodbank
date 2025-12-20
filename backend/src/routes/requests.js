@@ -8,8 +8,14 @@ const router = express.Router();
 // Filters: urgency, bloodType, city
 router.get("/", async (req, res) => {
     try {
-        const { urgency, bloodType, city } = req.query;
-        const query = { status: "OPEN" };
+        const { urgency, bloodType, city, status } = req.query;
+        const query = {};
+
+        if (status) {
+            if (status !== "ALL") query.status = status;
+        } else {
+            query.status = "OPEN";
+        }
 
         if (urgency) query.urgency = urgency;
         if (bloodType) query.bloodType = bloodType;
