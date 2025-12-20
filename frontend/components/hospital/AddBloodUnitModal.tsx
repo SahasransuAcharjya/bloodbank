@@ -18,6 +18,9 @@ export function AddBloodUnitModal({ isOpen, onClose, onSuccess }: AddBloodUnitMo
         bloodType: "A+",
         volumeML: 450,
         expiryDate: "",
+        donorName: "",
+        donorAge: "",
+        donationDate: new Date().toISOString().split('T')[0],
     });
 
     if (!isOpen) return null;
@@ -45,6 +48,9 @@ export function AddBloodUnitModal({ isOpen, onClose, onSuccess }: AddBloodUnitMo
                     bloodType: "A+",
                     volumeML: 450,
                     expiryDate: "",
+                    donorName: "",
+                    donorAge: "",
+                    donationDate: new Date().toISOString().split('T')[0],
                 });
             } else {
                 console.error("Failed to add blood unit");
@@ -82,6 +88,55 @@ export function AddBloodUnitModal({ isOpen, onClose, onSuccess }: AddBloodUnitMo
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                    {/* Donor Details Section */}
+                    <div className="space-y-4 rounded-xl bg-gray-50 p-4 dark:bg-gray-800/50">
+                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Donor Details</h3>
+
+                        <div>
+                            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Donor Name
+                            </label>
+                            <input
+                                type="text"
+                                required
+                                value={formData.donorName}
+                                onChange={(e) => setFormData({ ...formData, donorName: e.target.value })}
+                                placeholder="Enter donor name"
+                                className="w-full rounded-lg border border-gray-300 p-2.5 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    Age
+                                </label>
+                                <input
+                                    type="number"
+                                    required
+                                    min="18"
+                                    max="65"
+                                    value={formData.donorAge}
+                                    onChange={(e) => setFormData({ ...formData, donorAge: e.target.value })}
+                                    className="w-full rounded-lg border border-gray-300 p-2.5 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                />
+                            </div>
+                            <div>
+                                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    Donation Date
+                                </label>
+                                <input
+                                    type="date"
+                                    required
+                                    value={formData.donationDate}
+                                    onChange={(e) => setFormData({ ...formData, donationDate: e.target.value })}
+                                    className="w-full rounded-lg border border-gray-300 p-2.5 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="h-px bg-gray-200 dark:bg-gray-700" />
                     <div>
                         <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                             Blood Type

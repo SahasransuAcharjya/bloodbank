@@ -70,6 +70,11 @@ export async function updateUnitStatus(unitId, status) {
 }
 
 export async function getInventoryStats(hospitalId) {
+  if (!hospitalId || !mongoose.Types.ObjectId.isValid(hospitalId)) {
+    console.error("Invalid hospitalId passed to getInventoryStats:", hospitalId);
+    return {};
+  }
+
   // Aggregate counts by blood type
   const stats = await BloodUnit.aggregate([
     { $match: { hospitalId: new mongoose.Types.ObjectId(hospitalId), status: "AVAILABLE" } },

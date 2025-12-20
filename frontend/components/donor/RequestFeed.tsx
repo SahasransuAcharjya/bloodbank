@@ -108,8 +108,8 @@ export function RequestFeed({ donor }: RequestFeedProps) {
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
                                 className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${activeTab === tab
-                                        ? "bg-[#1D3557] text-white shadow-sm dark:bg-[#457B9D]"
-                                        : "text-[#333333]/60 hover:bg-white dark:text-gray-400 dark:hover:bg-[#1e293b]"
+                                    ? "bg-[#1D3557] text-white shadow-sm dark:bg-[#457B9D]"
+                                    : "text-[#333333]/60 hover:bg-white dark:text-gray-400 dark:hover:bg-[#1e293b]"
                                     }`}
                             >
                                 {tab === "EMERGENCY" ? "SOS" : tab}
@@ -132,8 +132,8 @@ export function RequestFeed({ donor }: RequestFeedProps) {
                     <div
                         key={req._id}
                         className={`relative overflow-hidden rounded-2xl bg-white p-4 shadow-sm transition-all hover:shadow-md dark:bg-[#1e293b] ${req.urgency === "EMERGENCY"
-                                ? "border-l-4 border-[#D90429] ring-1 ring-[#D90429]/10"
-                                : "border-l-4 border-[#2A9D8F]"
+                            ? "border-l-4 border-[#D90429] ring-1 ring-[#D90429]/10"
+                            : "border-l-4 border-[#2A9D8F]"
                             }`}
                     >
                         {req.urgency === "EMERGENCY" && (
@@ -156,7 +156,8 @@ export function RequestFeed({ donor }: RequestFeedProps) {
                                     {req.hospitalName} • {req.location?.city || "Unknown"} • {getDistance(req.location)} away
                                 </p>
                             </div>
-                            <div className="text-right">
+                            <div className="flex flex-col items-end">
+                                {req.urgency === "EMERGENCY" && <div className="mb-2 h-6" />}
                                 <p className="text-xs font-medium text-[#333333]/60 dark:text-gray-400">Needs</p>
                                 <p className="font-bold text-[#1D3557] dark:text-[#A8DADC]">{req.unitsRequired} Units</p>
                             </div>

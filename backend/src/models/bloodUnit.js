@@ -38,6 +38,19 @@ const bloodUnitSchema = new Schema(
         donorId: {
             type: Schema.Types.ObjectId,
             ref: "User", // Optional: Link to donor if known
+        },
+        donorName: {
+            type: String,
+            trim: true,
+        },
+        donorAge: {
+            type: Number,
+            min: 18,
+            max: 65,
+        },
+        donationDate: {
+            type: Date,
+            default: Date.now,
         }
     },
     { timestamps: true }
