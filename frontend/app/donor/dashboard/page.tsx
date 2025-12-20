@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Bell } from "lucide-react";
 import { CampBanner } from "@/components/donor/CampBanner";
 import { HeroStats } from "@/components/donor/HeroStats";
 import { RequestFeed } from "@/components/donor/RequestFeed";
@@ -13,9 +14,10 @@ export default function DonorDashboardPage() {
   const router = useRouter();
   const [donor, setDonor] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [notificationCount, setNotificationCount] = useState(0);
 
   useEffect(() => {
-    async function fetchDonor() {
+    async function fetchData() {
       const token = localStorage.getItem("jeevandhaara-token");
       if (!token) {
         router.push("/login");
@@ -23,6 +25,7 @@ export default function DonorDashboardPage() {
       }
 
       try {
+        // Fetch Donor Profile
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/donors/me`,
           {
@@ -35,13 +38,23 @@ export default function DonorDashboardPage() {
         } else {
           router.push("/login");
         }
+
+        // Fetch Notifications
+        const notifRes = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/notifications`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (notifRes.ok) {
+          const data = await notifRes.json();
+          setNotificationCount(data.length);
+        }
       } catch (err) {
         console.error(err);
       } finally {
         setLoading(false);
       }
     }
-    fetchDonor();
+    fetchData();
   }, [router]);
 
   if (loading) {
@@ -65,7 +78,17 @@ export default function DonorDashboardPage() {
               You are a hero. Ready to save a life today?
             </p>
           </div>
-          <ProfileDropdown user={{ name: donor?.name || "User", role: "DONOR" }} />
+          <div className="flex items-center gap-4">
+            <a href="/notifications" className="relative rounded-full p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
+              <Bell className="h-6 w-6" />
+              {notificationCount > 0 && (
+                <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                  {notificationCount > 9 ? "9+" : notificationCount}
+                </span>
+              )}
+            </a>
+            <ProfileDropdown user={{ name: donor?.name || "User", role: "DONOR" }} />
+          </div>
         </header>
 
         {/* Top Banner */}

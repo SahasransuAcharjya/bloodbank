@@ -1,5 +1,7 @@
 import express from "express";
 import BloodRequest from "../models/bloodRequest.js";
+import Notification from "../models/notification.js";
+import User from "../models/user.js";
 import { verifyToken, requireRole } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -69,7 +71,22 @@ router.post("/", verifyToken, async (req, res) => {
             deadline,
             contactPhone,
             description,
+            description,
         });
+
+        // Notify all Hospitals about the new request
+        const hospitals = await User.find({ role: "HOSPITAL" });
+        const notifications = hospitals.map(hospital => ({
+            userId: hospital._id,
+            type: "REQUEST",
+            title: "New Blood Request",
+            message: `${urgency === "EMERGENCY" ? "URGENT: " : ""}New ${bloodType} request for ${patientName} at ${hospitalName}`,
+            referenceId: newRequest._id,
+        }));
+
+        if (notifications.length > 0) {
+            await Notification.insertMany(notifications);
+        }
 
         res.status(201).json(newRequest);
     } catch (err) {

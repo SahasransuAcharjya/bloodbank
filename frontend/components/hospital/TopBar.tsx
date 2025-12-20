@@ -7,27 +7,38 @@ import { ProfileDropdown } from "@/components/shared/ProfileDropdown";
 export function TopBar() {
     const [user, setUser] = useState<{ name: string; role: string } | null>(null);
 
+    const [notificationCount, setNotificationCount] = useState(0);
+
     useEffect(() => {
-        async function fetchUser() {
+        async function fetchData() {
             const token = localStorage.getItem("jeevandhaara-token");
             if (!token) return;
 
             try {
-                const res = await fetch(
+                // Fetch User
+                const userRes = await fetch(
                     `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/hospitals/me`,
-                    {
-                        headers: { Authorization: `Bearer ${token}` },
-                    }
+                    { headers: { Authorization: `Bearer ${token}` } }
                 );
-                if (res.ok) {
-                    const data = await res.json();
+                if (userRes.ok) {
+                    const data = await userRes.json();
                     setUser({ name: data.name, role: "HOSPITAL" });
                 }
+
+                // Fetch Notifications
+                const notifRes = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/notifications`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                if (notifRes.ok) {
+                    const data = await notifRes.json();
+                    setNotificationCount(data.length);
+                }
             } catch (err) {
-                console.error("Failed to fetch hospital profile", err);
+                console.error("Failed to fetch data", err);
             }
         }
-        fetchUser();
+        fetchData();
     }, []);
 
     return (
@@ -49,10 +60,14 @@ export function TopBar() {
                     Create Request
                 </button>
 
-                <button className="relative rounded-full p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
+                <a href="/notifications" className="relative rounded-full p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
                     <Bell className="h-6 w-6" />
-                    <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500"></span>
-                </button>
+                    {notificationCount > 0 && (
+                        <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                            {notificationCount > 9 ? "9+" : notificationCount}
+                        </span>
+                    )}
+                </a>
 
                 {user ? (
                     <ProfileDropdown user={user} />

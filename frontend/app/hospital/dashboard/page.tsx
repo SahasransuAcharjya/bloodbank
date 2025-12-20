@@ -39,7 +39,7 @@ export default function HospitalDashboardPage() {
         setStats(data);
       } else {
         if (res.status === 403 || res.status === 401) {
-          console.error("Authentication failed:", res.status);
+          console.warn("Authentication failed (redirecting to login):", res.status);
           localStorage.removeItem("jeevandhaara-token");
           router.push("/login");
           return;
