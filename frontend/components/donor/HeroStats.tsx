@@ -14,6 +14,10 @@ interface HeroStatsProps {
 export function HeroStats({ donor }: HeroStatsProps) {
     const [flipped, setFlipped] = useState(false);
 
+    if (!donor) {
+        return <div className="h-48 w-full animate-pulse rounded-2xl bg-gray-200 dark:bg-gray-800"></div>;
+    }
+
     return (
         <div className="flex flex-col gap-4">
             {/* Digital Blood Card */}

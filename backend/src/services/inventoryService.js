@@ -51,6 +51,9 @@ export async function getHospitalInventory(hospitalId) {
 }
 
 export async function getExpiringUnits(hospitalId, daysThreshold = 2) {
+  if (!hospitalId || !mongoose.Types.ObjectId.isValid(hospitalId)) {
+    return [];
+  }
   const thresholdDate = new Date();
   thresholdDate.setDate(thresholdDate.getDate() + daysThreshold);
 

@@ -86,33 +86,33 @@ export default function HospitalProfilePage() {
         }
     }
 
-    if (loading) return <div className="p-8 text-center">Loading...</div>;
+    if (loading) return <div className="p-8 text-center dark:text-white">Loading...</div>;
 
     return (
-        <main className="min-h-screen bg-[#F1FAEE] p-4 sm:p-8">
+        <main className="min-h-screen bg-[#F1FAEE] p-4 sm:p-8 dark:bg-[#0f172a]">
             <div className="mx-auto max-w-2xl">
-                <h1 className="mb-6 text-2xl font-bold text-[#1D3557]">
+                <h1 className="mb-6 text-2xl font-bold text-[#1D3557] dark:text-[#A8DADC]">
                     Hospital Profile
                 </h1>
 
-                <div className="glass-card p-6">
+                <div className="glass-card p-6 dark:bg-[#1e293b] dark:border dark:border-gray-700">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Read-only Email */}
                         <div>
-                            <label className="mb-1 block text-sm font-medium text-[#333333]/70">
+                            <label className="mb-1 block text-sm font-medium text-[#333333]/70 dark:text-gray-400">
                                 Email
                             </label>
                             <input
                                 type="email"
                                 disabled
                                 value={formData.email}
-                                className="w-full rounded-xl border border-[#1D3557]/10 bg-gray-100 px-4 py-2 text-gray-500"
+                                className="w-full rounded-xl border border-[#1D3557]/10 bg-gray-100 px-4 py-2 text-gray-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400"
                             />
                         </div>
 
                         {/* Name */}
                         <div>
-                            <label className="mb-1 block text-sm font-medium text-[#333333]/70">
+                            <label className="mb-1 block text-sm font-medium text-[#333333]/70 dark:text-gray-400">
                                 Hospital Name
                             </label>
                             <input
@@ -122,13 +122,13 @@ export default function HospitalProfilePage() {
                                 onChange={(e) =>
                                     setFormData({ ...formData, name: e.target.value })
                                 }
-                                className="w-full rounded-xl border border-[#1D3557]/20 bg-white/50 px-4 py-2 outline-none focus:border-[#E63946]"
+                                className="w-full rounded-xl border border-[#1D3557]/20 bg-white/50 px-4 py-2 outline-none focus:border-[#E63946] dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:focus:border-[#E63946]"
                             />
                         </div>
 
                         {/* Phone */}
                         <div>
-                            <label className="mb-1 block text-sm font-medium text-[#333333]/70">
+                            <label className="mb-1 block text-sm font-medium text-[#333333]/70 dark:text-gray-400">
                                 Contact Phone
                             </label>
                             <input
@@ -137,14 +137,14 @@ export default function HospitalProfilePage() {
                                 onChange={(e) =>
                                     setFormData({ ...formData, phone: e.target.value })
                                 }
-                                className="w-full rounded-xl border border-[#1D3557]/20 bg-white/50 px-4 py-2 outline-none focus:border-[#E63946]"
+                                className="w-full rounded-xl border border-[#1D3557]/20 bg-white/50 px-4 py-2 outline-none focus:border-[#E63946] dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:focus:border-[#E63946]"
                             />
                         </div>
 
                         {/* Location */}
                         <div className="grid gap-4 sm:grid-cols-2">
                             <div>
-                                <label className="mb-1 block text-sm font-medium text-[#333333]/70">
+                                <label className="mb-1 block text-sm font-medium text-[#333333]/70 dark:text-gray-400">
                                     City
                                 </label>
                                 <input
@@ -153,11 +153,11 @@ export default function HospitalProfilePage() {
                                     onChange={(e) =>
                                         setFormData({ ...formData, city: e.target.value })
                                     }
-                                    className="w-full rounded-xl border border-[#1D3557]/20 bg-white/50 px-4 py-2 outline-none focus:border-[#E63946]"
+                                    className="w-full rounded-xl border border-[#1D3557]/20 bg-white/50 px-4 py-2 outline-none focus:border-[#E63946] dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:focus:border-[#E63946]"
                                 />
                             </div>
                             <div>
-                                <label className="mb-1 block text-sm font-medium text-[#333333]/70">
+                                <label className="mb-1 block text-sm font-medium text-[#333333]/70 dark:text-gray-400">
                                     State
                                 </label>
                                 <input
@@ -166,13 +166,13 @@ export default function HospitalProfilePage() {
                                     onChange={(e) =>
                                         setFormData({ ...formData, state: e.target.value })
                                     }
-                                    className="w-full rounded-xl border border-[#1D3557]/20 bg-white/50 px-4 py-2 outline-none focus:border-[#E63946]"
+                                    className="w-full rounded-xl border border-[#1D3557]/20 bg-white/50 px-4 py-2 outline-none focus:border-[#E63946] dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:focus:border-[#E63946]"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="mb-1 block text-sm font-medium text-[#333333]/70">
+                            <label className="mb-1 block text-sm font-medium text-[#333333]/70 dark:text-gray-400">
                                 Address
                             </label>
                             <textarea
@@ -181,7 +181,7 @@ export default function HospitalProfilePage() {
                                 onChange={(e) =>
                                     setFormData({ ...formData, address: e.target.value })
                                 }
-                                className="w-full rounded-xl border border-[#1D3557]/20 bg-white/50 px-4 py-2 outline-none focus:border-[#E63946]"
+                                className="w-full rounded-xl border border-[#1D3557]/20 bg-white/50 px-4 py-2 outline-none focus:border-[#E63946] dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:focus:border-[#E63946]"
                             />
                         </div>
 

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { RequestBloodModal } from "./RequestBloodModal";
 import { ShareModal } from "./ShareModal";
 import { DonateModal } from "./DonateModal";
+import { RequestDetailsModal } from "./RequestDetailsModal";
 
 type Tab = "EMERGENCY" | "MATCHED" | "ALL";
 
@@ -18,6 +19,7 @@ interface Request {
     contactPhone: string;
     location: {
         city: string;
+        address?: string;
     };
     createdAt: string;
 }
@@ -33,6 +35,9 @@ export function RequestFeed({ donor }: RequestFeedProps) {
     const [requests, setRequests] = useState<Request[]>([]);
     const [loading, setLoading] = useState(true);
     const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+
+    // Modal States
+    const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
     const [shareModalData, setShareModalData] = useState<Request | null>(null);
     const [donateModalData, setDonateModalData] = useState<Request | null>(null);
 
@@ -41,6 +46,7 @@ export function RequestFeed({ donor }: RequestFeedProps) {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/requests`);
             if (res.ok) {
                 const data = await res.json();
+                console.log("RequestFeed fetched:", data);
                 setRequests(data);
             }
         } catch (err) {
@@ -76,16 +82,6 @@ export function RequestFeed({ donor }: RequestFeedProps) {
         }
         return true;
     });
-
-    const getTimeLeft = (createdAt: string) => {
-        // Mock logic for time left based on urgency
-        return "2 hours";
-    };
-
-    const getDistance = (location: any) => {
-        // Mock logic for distance
-        return "2.5 km";
-    };
 
     if (loading) {
         return <div className="h-64 w-full animate-pulse rounded-3xl bg-gray-200 dark:bg-gray-800"></div>;
@@ -127,61 +123,37 @@ export function RequestFeed({ donor }: RequestFeedProps) {
                 + Request Blood
             </button>
 
-            <div className="flex flex-col gap-3 overflow-y-auto pr-1 custom-scrollbar" style={{ maxHeight: "500px" }}>
+            {/* Grid Layout for Tiles */}
+            <div className="grid grid-cols-2 gap-3 overflow-y-auto pr-1 custom-scrollbar sm:grid-cols-3 md:grid-cols-4" style={{ maxHeight: "500px" }}>
                 {filteredRequests.map((req) => (
-                    <div
+                    <button
                         key={req._id}
-                        className={`relative overflow-hidden rounded-2xl bg-white p-4 shadow-sm transition-all hover:shadow-md dark:bg-[#1e293b] ${req.urgency === "EMERGENCY"
-                            ? "border-l-4 border-[#D90429] ring-1 ring-[#D90429]/10"
-                            : "border-l-4 border-[#2A9D8F]"
+                        onClick={() => setSelectedRequest(req)}
+                        className={`relative flex flex-col items-center justify-center gap-2 rounded-2xl p-4 shadow-sm transition-all hover:scale-105 hover:shadow-md ${req.urgency === "EMERGENCY"
+                            ? "bg-[#D90429] text-white"
+                            : "bg-white text-[#1D3557] dark:bg-[#1e293b] dark:text-[#A8DADC]"
                             }`}
                     >
                         {req.urgency === "EMERGENCY" && (
-                            <div className="absolute right-0 top-0 rounded-bl-xl bg-[#D90429] px-3 py-1 text-[10px] font-bold text-white animate-pulse">
-                                URGENT • {getTimeLeft(req.createdAt)} left
-                            </div>
+                            <div className="absolute right-2 top-2 h-2 w-2 animate-pulse rounded-full bg-white" />
                         )}
 
-                        <div className="flex justify-between">
-                            <div>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-lg font-bold text-[#1D3557] dark:text-[#A8DADC]">
-                                        {req.bloodType}
-                                    </span>
-                                    <span className="text-sm font-medium text-[#333333] dark:text-gray-200">
-                                        for {req.patientName}
-                                    </span>
-                                </div>
-                                <p className="text-xs text-[#333333]/60 dark:text-gray-400">
-                                    {req.hospitalName} • {req.location?.city || "Unknown"} • {getDistance(req.location)} away
-                                </p>
-                            </div>
-                            <div className="flex flex-col items-end">
-                                {req.urgency === "EMERGENCY" && <div className="mb-2 h-6" />}
-                                <p className="text-xs font-medium text-[#333333]/60 dark:text-gray-400">Needs</p>
-                                <p className="font-bold text-[#1D3557] dark:text-[#A8DADC]">{req.unitsRequired} Units</p>
-                            </div>
+                        <span className="text-3xl font-black tracking-tighter">
+                            {req.bloodType}
+                        </span>
+                        <div className="flex flex-col items-center">
+                            <span className={`text-xs font-medium ${req.urgency === "EMERGENCY" ? "text-white/80" : "text-gray-500 dark:text-gray-400"}`}>
+                                Needs
+                            </span>
+                            <span className="text-lg font-bold">
+                                {req.unitsRequired} <span className="text-xs font-normal">Units</span>
+                            </span>
                         </div>
-
-                        <div className="mt-4 flex gap-2">
-                            <button
-                                onClick={() => setDonateModalData(req)}
-                                className="flex-1 rounded-xl bg-[#1D3557] py-2 text-xs font-bold text-white transition-colors hover:bg-[#162a45] dark:bg-[#457B9D] dark:hover:bg-[#35607a]"
-                            >
-                                I Can Donate
-                            </button>
-                            <button
-                                onClick={() => setShareModalData(req)}
-                                className="rounded-xl border border-[#1D3557]/10 bg-gray-50 px-4 py-2 text-xs font-medium text-[#1D3557] hover:bg-gray-100 dark:border-white/10 dark:bg-[#0f172a] dark:text-gray-300 dark:hover:bg-[#1e293b]"
-                            >
-                                Share
-                            </button>
-                        </div>
-                    </div>
+                    </button>
                 ))}
 
                 {filteredRequests.length === 0 && (
-                    <div className="py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+                    <div className="col-span-full py-8 text-center text-sm text-gray-500 dark:text-gray-400">
                         No active requests in this category.
                     </div>
                 )}
@@ -191,6 +163,14 @@ export function RequestFeed({ donor }: RequestFeedProps) {
                 isOpen={isRequestModalOpen}
                 onClose={() => setIsRequestModalOpen(false)}
                 onSuccess={fetchRequests}
+            />
+
+            <RequestDetailsModal
+                isOpen={!!selectedRequest}
+                onClose={() => setSelectedRequest(null)}
+                request={selectedRequest}
+                onDonate={() => setDonateModalData(selectedRequest)}
+                onShare={() => setShareModalData(selectedRequest)}
             />
 
             <ShareModal

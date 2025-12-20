@@ -38,9 +38,17 @@ export default function HospitalDashboardPage() {
         const data = await res.json();
         setStats(data);
       } else {
+        if (res.status === 403 || res.status === 401) {
+          console.error("Authentication failed:", res.status);
+          localStorage.removeItem("jeevandhaara-token");
+          router.push("/login");
+          return;
+        }
         // If 403/401, maybe not a hospital or invalid token
         // For now, let's just log it. In real app, redirect or show error.
-        console.error("Failed to fetch stats");
+        console.error("Failed to fetch stats:", res.status, res.statusText);
+        const text = await res.text();
+        console.error("Response body:", text);
       }
     } catch (err) {
       console.error(err);
