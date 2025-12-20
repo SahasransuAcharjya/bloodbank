@@ -22,6 +22,7 @@ interface Request {
         address?: string;
     };
     createdAt: string;
+    status: string;
 }
 
 interface RequestFeedProps {
@@ -43,7 +44,7 @@ export function RequestFeed({ donor }: RequestFeedProps) {
 
     const fetchRequests = useCallback(async () => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/requests`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/requests?status=OPEN`);
             if (res.ok) {
                 const data = await res.json();
                 console.log("RequestFeed fetched:", data);
@@ -75,6 +76,7 @@ export function RequestFeed({ donor }: RequestFeedProps) {
     };
 
     const filteredRequests = requests.filter((req) => {
+        if (req.status !== "OPEN") return false;
         if (activeTab === "ALL") return true;
         if (activeTab === "EMERGENCY") return req.urgency === "EMERGENCY";
         if (activeTab === "MATCHED") {
