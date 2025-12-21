@@ -12,6 +12,7 @@ export async function listRequests({ hospitalId, status }) {
   if (hospitalId) filter.requesterId = hospitalId;
   if (status) filter.status = status;
 
+  console.log("listRequests Filter:", filter);
   return BloodRequest.find(filter)
     .sort({ createdAt: -1 })
     .populate("requesterId", "name email phone");

@@ -8,8 +8,7 @@ import {
     Users,
     ClipboardList,
     Tent,
-    Settings,
-    LogOut
+    Settings
 } from "lucide-react";
 import { clsx } from "clsx";
 
@@ -57,13 +56,7 @@ export function Sidebar() {
                     })}
                 </nav>
 
-                {/* Footer */}
-                <div className="border-t border-gray-200 p-4 dark:border-gray-800">
-                    <button className="flex w-full items-center rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
-                        <LogOut className="mr-3 h-5 w-5" />
-                        Sign Out
-                    </button>
-                </div>
+
             </div>
         </aside>
     );

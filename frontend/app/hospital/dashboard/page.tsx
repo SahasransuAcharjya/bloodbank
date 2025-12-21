@@ -102,13 +102,13 @@ export default function HospitalDashboardPage() {
         />
         <StatCard
           label="Critical Low"
-          value="2 Types"
+          value={`${stats?.criticalLowCount || 0} Types`}
           icon={AlertCircle}
           color="text-red-600"
         />
         <StatCard
           label="Donors Today"
-          value="14"
+          value={stats?.donorsToday || 0}
           icon={Users}
         />
       </div>

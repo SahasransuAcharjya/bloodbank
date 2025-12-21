@@ -59,17 +59,22 @@ export async function getDashboardStats(req, res, next) {
     const hospitalId = req.user.id;
 
     // Parallelize queries for performance
-    const [inventoryStats, expiringUnits, pendingRequests] = await Promise.all([
+    const [inventoryStats, expiringUnits, pendingRequests, donorsToday, criticalLowCount] = await Promise.all([
       inventoryService.getInventoryStats(hospitalId),
       inventoryService.getExpiringUnits(hospitalId),
-      requestService.listRequests({ hospitalId, status: "OPEN" }) // Assuming listRequests supports status filter
+      requestService.listRequests({ status: "OPEN" }),
+      inventoryService.getDonorsToday(hospitalId),
+      inventoryService.getCriticalLowCount(hospitalId)
     ]);
+
+    console.log("Dashboard Stats - Pending Requests Count:", pendingRequests.length);
 
     res.json({
       inventory: inventoryStats,
       expiringUnits,
       pendingRequests: pendingRequests.length,
-      // Add other stats as needed
+      donorsToday,
+      criticalLowCount
     });
   } catch (err) {
     next(err);

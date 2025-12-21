@@ -91,3 +91,36 @@ export async function getInventoryStats(hospitalId) {
   });
   return result;
 }
+
+export async function getDonorsToday(hospitalId) {
+  if (!hospitalId || !mongoose.Types.ObjectId.isValid(hospitalId)) return 0;
+
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const count = await BloodUnit.countDocuments({
+    hospitalId,
+    donationDate: { $gte: startOfDay }
+  });
+  return count;
+}
+
+export async function getCriticalLowCount(hospitalId, threshold = 5) {
+  if (!hospitalId || !mongoose.Types.ObjectId.isValid(hospitalId)) return 0;
+
+  // Get all blood types counts
+  const stats = await getInventoryStats(hospitalId);
+
+  // Count how many types have < threshold
+  const bloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+  let criticalCount = 0;
+
+  bloodTypes.forEach(type => {
+    const count = stats[type] || 0;
+    if (count < threshold) {
+      criticalCount++;
+    }
+  });
+
+  return criticalCount;
+}
