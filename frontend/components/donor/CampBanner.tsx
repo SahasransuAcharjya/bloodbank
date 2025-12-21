@@ -7,6 +7,8 @@ interface Camp {
     _id: string;
     name: string;
     date: string;
+    startTime: string;
+    endTime: string;
     location: {
         city: string;
         address: string;
@@ -121,19 +123,22 @@ export function CampBanner() {
                         Join us at {camp.location.address}. Help us reach our goal of {camp.targetUnits} units!
                     </p>
 
-                    <div className="flex items-center gap-3 text-xs font-medium text-white/70">
+                    <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-white/70">
                         <span className="flex items-center gap-1">
-                            📅 {new Date(camp.date).toLocaleDateString()}
+                            📅 {new Date(camp.date).toLocaleDateString('en-GB')}
                         </span>
                         <span className="flex items-center gap-1">
-                            📍 {camp.location.city}
+                            ⏰ {camp.startTime} - {camp.endTime}
+                        </span>
+                        <span className="flex items-center gap-1">
+                            📍 {camp.location.address}, {camp.location.city}
                         </span>
                     </div>
 
                     {/* Progress Bar */}
                     <div className="mt-4">
                         <div className="mb-1 flex justify-between text-xs">
-                            <span>{camp.registeredDonors.length} Registered</span>
+                            <span>{camp.registeredDonors.length} Donors Registered</span>
                             <span>Goal: {camp.targetUnits}</span>
                         </div>
                         <div className="h-2 w-full overflow-hidden rounded-full bg-white/20">

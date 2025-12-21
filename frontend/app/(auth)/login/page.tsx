@@ -48,51 +48,84 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#F1FAEE] px-4">
-      <div className="glass-card w-full max-w-md p-6">
-        <h1 className="mb-2 text-xl font-semibold text-[#1D3557]">
-          Login to JeevanDhaara
-        </h1>
-        <p className="mb-4 text-sm text-[#333333]/70">
-          Access your donor, hospital, or admin dashboard.
-        </p>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="mb-1 block text-xs font-medium text-[#333333]/80">
-              Email
+    <main className="flex min-h-screen items-center justify-center bg-[#F1FAEE] px-4 dark:bg-slate-950 transition-colors duration-300">
+      <div className="glass-card w-full max-w-md p-8 animate-fade-in border border-white/20 dark:border-slate-800/50">
+        <div className="mb-6 text-center">
+          <h1 className="mb-2 text-3xl font-bold text-[#1D3557] dark:text-white tracking-tight">
+            Welcome Back
+          </h1>
+          <p className="text-sm text-[#333333]/70 dark:text-slate-400">
+            Login to access your JeevanDhaara dashboard
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-[#1D3557]/80 dark:text-slate-300 uppercase tracking-wider ml-1">
+              Email Address
             </label>
             <input
               type="email"
               required
-              className="w-full rounded-2xl border border-[#1D3557]/15 bg-white/80 px-3 py-2 text-sm outline-none focus:border-[#E63946]"
+              className="w-full rounded-xl border border-[#1D3557]/10 bg-white/60 px-4 py-3 text-sm outline-none focus:border-[#E63946] focus:ring-2 focus:ring-[#E63946]/10 transition-all duration-200 dark:bg-slate-900/50 dark:border-slate-700 dark:text-white dark:focus:border-[#E63946] dark:placeholder-slate-500"
+              placeholder="name@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div>
-            <label className="mb-1 block text-xs font-medium text-[#333333]/80">
-              Password
-            </label>
+
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between ml-1">
+              <label className="block text-xs font-semibold text-[#1D3557]/80 dark:text-slate-300 uppercase tracking-wider">
+                Password
+              </label>
+              <a href="#" className="text-xs font-medium text-[#E63946] hover:text-[#d42f3b] transition-colors">
+                Forgot password?
+              </a>
+            </div>
             <input
               type="password"
               required
-              className="w-full rounded-2xl border border-[#1D3557]/15 bg-white/80 px-3 py-2 text-sm outline-none focus:border-[#E63946]"
+              className="w-full rounded-xl border border-[#1D3557]/10 bg-white/60 px-4 py-3 text-sm outline-none focus:border-[#E63946] focus:ring-2 focus:ring-[#E63946]/10 transition-all duration-200 dark:bg-slate-900/50 dark:border-slate-700 dark:text-white dark:focus:border-[#E63946] dark:placeholder-slate-500"
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+
           {error && (
-            <p className="text-xs text-[#E63946]">
+            <div className="rounded-lg bg-red-50 p-3 text-xs font-medium text-[#E63946] dark:bg-red-900/20 dark:text-red-400 border border-red-100 dark:border-red-900/30 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
               {error}
-            </p>
+            </div>
           )}
+
           <button
             type="submit"
             disabled={loading}
-            className="cta-btn w-full justify-center"
+            className="cta-btn w-full justify-center text-base py-3.5 shadow-xl shadow-[#E63946]/20 hover:shadow-[#E63946]/40"
           >
-            {loading ? "Signing in..." : "Login"}
+            {loading ? (
+              <div className="flex items-center gap-2">
+                <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Signing in...
+              </div>
+            ) : (
+              "Sign In"
+            )}
           </button>
+
+          <p className="text-center text-sm text-[#333333]/60 dark:text-slate-500 mt-6">
+            Don't have an account?{" "}
+            <a href="/register" className="font-semibold text-[#E63946] hover:text-[#d42f3b] transition-colors">
+              Create account
+            </a>
+          </p>
         </form>
       </div>
     </main>
