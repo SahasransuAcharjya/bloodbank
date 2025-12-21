@@ -65,4 +65,17 @@ router.post("/:id/register", verifyToken, async (req, res) => {
     }
 });
 
+// DELETE camp (Admin or Hospital only)
+router.delete("/:id", verifyToken, requireRole("ADMIN", "HOSPITAL"), async (req, res) => {
+    try {
+        const camp = await Camp.findById(req.params.id);
+        if (!camp) return res.status(404).json({ message: "Camp not found" });
+
+        await Camp.findByIdAndDelete(req.params.id);
+        res.json({ message: "Camp deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ message: "Error deleting camp", error: err.message });
+    }
+});
+
 export default router;

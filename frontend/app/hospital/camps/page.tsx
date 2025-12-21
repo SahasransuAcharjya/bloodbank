@@ -27,6 +27,30 @@ export default function CampsPage() {
         fetchCamps();
     }, []);
 
+    const handleDelete = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this camp? This action cannot be undone.")) return;
+
+        try {
+            const token = localStorage.getItem("jeevandhaara-token");
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/camps/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            if (res.ok) {
+                setCamps(prev => prev.filter(c => c._id !== id));
+            } else {
+                const error = await res.json();
+                alert(error.message || "Failed to delete camp");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Something went wrong");
+        }
+    };
+
     if (loading) return <div className="p-8">Loading...</div>;
 
     return (
@@ -45,7 +69,15 @@ export default function CampsPage() {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {camps.map((camp) => (
                     <div key={camp._id} className="rounded-xl bg-white p-6 shadow-sm dark:bg-[#1e293b]">
-                        <h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">{camp.name}</h3>
+                        <div className="flex justify-between items-start mb-2">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">{camp.name}</h3>
+                            <button
+                                onClick={() => handleDelete(camp._id)}
+                                className="text-red-500 hover:text-red-700 text-xs font-medium px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                            >
+                                Delete
+                            </button>
+                        </div>
                         <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
                             <div className="flex items-center gap-2">
                                 <Calendar className="h-4 w-4 text-gray-400" />
@@ -82,6 +114,7 @@ export default function CampsPage() {
             <CreateCampModal
                 isOpen={showCreateModal}
                 onClose={() => setShowCreateModal(false)}
+                onSuccess={fetchCamps}
             />
         </div>
     );
