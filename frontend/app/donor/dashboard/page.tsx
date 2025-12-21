@@ -71,6 +71,10 @@ export default function DonorDashboardPage() {
         {/* Header */}
         <header className="flex items-center justify-between">
           <div>
+            <div className="mb-1 flex items-baseline gap-2">
+              <span className="text-2xl font-bold text-[#E63946]">JeevanDhaara</span>
+              <span className="text-lg font-medium text-gray-500 dark:text-gray-400">Donor</span>
+            </div>
             <h1 className="text-2xl font-bold text-[#1D3557] dark:text-[#A8DADC]">
               Hello, {donor?.name?.split(" ")[0] || "Donor"}! 👋
             </h1>
